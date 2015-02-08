@@ -49,6 +49,8 @@ public class NavigationNotice {
             get { return noticeView.contentOffset.y }
         }
         
+        var showAnimations: ((() -> Void, (Bool) -> Void) -> Void)?
+        var hideAnimations: ((() -> Void, (Bool) -> Void) -> Void)?
         var hideCompletionHandler: (() -> Void)?
         
         override func loadView() {
@@ -208,11 +210,19 @@ public class NavigationNotice {
         }
         
         func showContent(animations: () -> Void, completion: (Bool) -> Void) {
-            UIView.animateWithDuration(0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0, options: .BeginFromCurrentState, animations: animations, completion: completion)
+            if let show = showAnimations {
+                show(animations, completion)
+            } else {
+                UIView.animateWithDuration(0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0, options: .BeginFromCurrentState, animations: animations, completion: completion)
+            }
         }
         
         func hideContent(animations: () -> Void, completion: (Bool) -> Void) {
-            UIView.animateWithDuration(0.25, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .BeginFromCurrentState, animations: animations, completion: completion)
+            if let hide = hideAnimations {
+                hide(animations, completion)
+            } else {
+                UIView.animateWithDuration(0.25, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .BeginFromCurrentState, animations: animations, completion: completion)
+            }
         }
     }
 
@@ -233,6 +243,8 @@ public class NavigationNotice {
         private var contents: [NavigationNotice] = []
         private var showingNotice: NavigationNotice?
         private var statusBarHidden: Bool = true
+        private var showAnimations: ((() -> Void, (Bool) -> Void) -> Void)?
+        private var hideAnimations: ((() -> Void, (Bool) -> Void) -> Void)?
         
         private func startNotice(notice: NavigationNotice) {
             showingNotice = notice
@@ -287,6 +299,23 @@ public class NavigationNotice {
         }
     }
     
+    private var noticeViewController = ViewController()
+    private var statusBarHidden: Bool = NavigationNotice.defaultStatusBarHidden
+    public class var defaultStatusBarHidden: Bool {
+        set { sharedManager().statusBarHidden = newValue }
+        get { return sharedManager().statusBarHidden }
+    }
+    private var showAnimations: ((() -> Void, (Bool) -> Void) -> Void)? = NavigationNotice.defaultShowAnimations
+    public class var defaultShowAnimations: ((() -> Void, (Bool) -> Void) -> Void)? {
+        set { sharedManager().showAnimations = newValue }
+        get { return sharedManager().showAnimations }
+    }
+    private var hideAnimations: ((() -> Void, (Bool) -> Void) -> Void)? = NavigationNotice.defaultHideAnimations
+    public class var defaultHideAnimations: ((() -> Void, (Bool) -> Void) -> Void)? {
+        set { sharedManager().hideAnimations = newValue }
+        get { return sharedManager().hideAnimations }
+    }
+    
     private class func sharedManager() -> NoticeManager {
         struct Singleton {
             static var notice = NoticeManager()
@@ -312,13 +341,6 @@ public class NavigationNotice {
         return notice
     }
     
-    private var noticeViewController = ViewController()
-    private var statusBarHidden: Bool = NavigationNotice.defaultStatusBarHidden
-    public class var defaultStatusBarHidden: Bool {
-        set { sharedManager().statusBarHidden = newValue }
-        get { return sharedManager().statusBarHidden }
-    }
-    
     private init() {}
     
     public func addContent(view: UIView) -> Self {
@@ -332,6 +354,8 @@ public class NavigationNotice {
     }
     
     public func showOn(view: UIView) -> Self {
+        noticeViewController.showAnimations = showAnimations
+        noticeViewController.hideAnimations = hideAnimations
         noticeViewController.targetView = view
         noticeViewController.hideCompletionHandler = {
             self.dynamicType.sharedManager().next()
@@ -344,8 +368,20 @@ public class NavigationNotice {
         return self
     }
     
+    public func showAnimations(animations: (() -> Void, (Bool) -> Void) -> Void) -> Self {
+        noticeViewController.showAnimations = animations
+        
+        return self
+    }
+    
     public func hide(interval: NSTimeInterval) -> Self {
         noticeViewController.setInterval(interval)
+        
+        return self
+    }
+    
+    public func hideAnimations(animations: (() -> Void, (Bool) -> Void) -> Void) -> Self {
+        noticeViewController.hideAnimations = animations
         
         return self
     }
