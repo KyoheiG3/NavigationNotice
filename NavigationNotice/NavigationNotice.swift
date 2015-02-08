@@ -32,7 +32,10 @@ public class NavigationNotice {
             }
         }
         
-        lazy var panGesture: UIPanGestureRecognizer = UIPanGestureRecognizer(target: self, action: "panGestureAction:")
+        private lazy var panGesture: UIPanGestureRecognizer = UIPanGestureRecognizer(target: self, action: "panGestureAction:")
+        private var scrollPanGesture: UIPanGestureRecognizer? {
+            return (noticeView.gestureRecognizers as? [UIGestureRecognizer])?.filter({ $0 as? UIPanGestureRecognizer != nil }).first as? UIPanGestureRecognizer
+        }
         private var noticeView: HitScrollView!
         private weak var targetView: UIView?
         private var contentView: UIView?
@@ -95,8 +98,10 @@ public class NavigationNotice {
             dispatch_after(time, dispatch_get_main_queue()) {
                 self.hiddenTimeInterval = 0
                 
-                if self.panGesture.state != .Changed {
-                    self.hide(true)
+                if self.autoHidden == true {
+                    if self.panGesture.state != .Changed && self.scrollPanGesture?.state != .Some(.Changed) {
+                        self.hide(true)
+                    }
                 }
             }
         }
@@ -191,6 +196,8 @@ public class NavigationNotice {
         func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
             if contentOffsetY >= 0 {
                 hide(false)
+            } else {
+                hideIfNeeded(true)
             }
         }
         
