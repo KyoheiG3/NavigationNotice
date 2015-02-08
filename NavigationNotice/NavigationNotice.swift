@@ -259,11 +259,13 @@ public class NavigationNotice {
         func add(notice: NavigationNotice) {
             contents.append(notice)
             
-            if showingNotice == nil {
-                noticeWindow = HitWindow(frame: UIScreen.mainScreen().bounds)
-                noticeWindow?.makeKeyAndVisible()
-                
-                next()
+            dispatch_async(dispatch_get_main_queue()) {
+                if self.showingNotice == nil {
+                    self.noticeWindow = HitWindow(frame: UIScreen.mainScreen().bounds)
+                    self.noticeWindow?.makeKeyAndVisible()
+                    
+                    self.next()
+                }
             }
         }
         
