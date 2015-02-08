@@ -9,7 +9,7 @@
 import UIKit
 
 public class NavigationNotice {
-    class ViewController: UIViewController, UIScrollViewDelegate {
+    class ViewController: UIViewController, UIScrollViewDelegate, UIGestureRecognizerDelegate {
         class HitView: UIView {
             override func hitTest(point: CGPoint, withEvent event: UIEvent?) -> UIView? {
                 if let superView = super.hitTest(point, withEvent: event) {
@@ -58,6 +58,8 @@ public class NavigationNotice {
         
         override func viewDidLoad() {
             super.viewDidLoad()
+            
+            panGesture.delegate = self
             
             noticeView = HitScrollView(frame: view.bounds)
             noticeView.clipsToBounds = false
@@ -199,6 +201,10 @@ public class NavigationNotice {
             } else {
                 hideIfNeeded(true)
             }
+        }
+        
+        func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+            return gestureRecognizer == panGesture || otherGestureRecognizer == panGesture
         }
         
         func showContent(animations: () -> Void, completion: (Bool) -> Void) {
