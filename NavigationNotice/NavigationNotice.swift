@@ -201,11 +201,11 @@ public class NavigationNotice {
             }
         }
         
-        func showContent(animations: () -> Void, completion: ((Bool) -> Void)?) {
+        func showContent(animations: () -> Void, completion: (Bool) -> Void) {
             UIView.animateWithDuration(0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0, options: .BeginFromCurrentState, animations: animations, completion: completion)
         }
         
-        func hideContent(animations: () -> Void, completion: ((Bool) -> Void)?) {
+        func hideContent(animations: () -> Void, completion: (Bool) -> Void) {
             UIView.animateWithDuration(0.25, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .BeginFromCurrentState, animations: animations, completion: completion)
         }
     }
