@@ -36,7 +36,7 @@ public class NavigationNotice {
         private var scrollPanGesture: UIPanGestureRecognizer? {
             return (noticeView.gestureRecognizers as? [UIGestureRecognizer])?.filter({ $0 as? UIPanGestureRecognizer != nil }).first as? UIPanGestureRecognizer
         }
-        private var noticeView: HitScrollView!
+        private lazy var noticeView: HitScrollView = HitScrollView(frame: self.view.bounds)
         private weak var targetView: UIView?
         private var contentView: UIView?
         private var autoHidden: Bool = false
@@ -63,7 +63,6 @@ public class NavigationNotice {
             
             panGesture.delegate = self
             
-            noticeView = HitScrollView(frame: view.bounds)
             noticeView.clipsToBounds = false
             noticeView.showsVerticalScrollIndicator = false
             noticeView.pagingEnabled = true
@@ -302,29 +301,24 @@ public class NavigationNotice {
     private var noticeViewController = ViewController()
     private var statusBarHidden: Bool = NavigationNotice.defaultStatusBarHidden
     public class var defaultStatusBarHidden: Bool {
-        set { sharedManager().statusBarHidden = newValue }
-        get { return sharedManager().statusBarHidden }
+        set { sharedManager.statusBarHidden = newValue }
+        get { return sharedManager.statusBarHidden }
     }
     private var showAnimations: ((() -> Void, (Bool) -> Void) -> Void)? = NavigationNotice.defaultShowAnimations
     public class var defaultShowAnimations: ((() -> Void, (Bool) -> Void) -> Void)? {
-        set { sharedManager().showAnimations = newValue }
-        get { return sharedManager().showAnimations }
+        set { sharedManager.showAnimations = newValue }
+        get { return sharedManager.showAnimations }
     }
     private var hideAnimations: ((() -> Void, (Bool) -> Void) -> Void)? = NavigationNotice.defaultHideAnimations
     public class var defaultHideAnimations: ((() -> Void, (Bool) -> Void) -> Void)? {
-        set { sharedManager().hideAnimations = newValue }
-        get { return sharedManager().hideAnimations }
+        set { sharedManager.hideAnimations = newValue }
+        get { return sharedManager.hideAnimations }
     }
     
-    private class func sharedManager() -> NoticeManager {
-        struct Singleton {
-            static var notice = NoticeManager()
-        }
-        return Singleton.notice
-    }
+    private static let sharedManager = NoticeManager()
     
     public class func currentNotice() -> NavigationNotice? {
-        return sharedManager().showingNotice
+        return sharedManager.showingNotice
     }
     
     public class func addContent(view: UIView) -> NavigationNotice {
