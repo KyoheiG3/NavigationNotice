@@ -34,7 +34,7 @@ public class NavigationNotice {
         
         private lazy var panGesture: UIPanGestureRecognizer = UIPanGestureRecognizer(target: self, action: "panGestureAction:")
         private var scrollPanGesture: UIPanGestureRecognizer? {
-            return (noticeView.gestureRecognizers as? [UIGestureRecognizer])?.filter({ $0 as? UIPanGestureRecognizer != nil }).first as? UIPanGestureRecognizer
+            return noticeView.gestureRecognizers?.filter({ $0 as? UIPanGestureRecognizer != nil }).first as? UIPanGestureRecognizer
         }
         private lazy var noticeView: HitScrollView = HitScrollView(frame: self.view.bounds)
         private weak var targetView: UIView?
@@ -83,7 +83,7 @@ public class NavigationNotice {
             if interval >= 0 {
                 autoHidden = true
                 
-                if let view = panGesture.view {
+                if panGesture.view != nil {
                     timer(interval)
                 }
             } else {
@@ -183,7 +183,7 @@ public class NavigationNotice {
                 return
             }
             
-            var locationOffsetY = gesture.locationInView(view).y
+            let locationOffsetY = gesture.locationInView(view).y
             
             if gesture.state == .Changed {
                 if contentHeight > locationOffsetY {
@@ -300,7 +300,7 @@ public class NavigationNotice {
         }
         
         func pop() -> NavigationNotice? {
-            if let notice = contents.first {
+            if contents.count >= 1 {
                 return contents.removeAtIndex(0)
             }
             return nil
