@@ -300,16 +300,19 @@ public class NavigationNotice {
     
     private var noticeViewController = ViewController()
     private var statusBarHidden: Bool = NavigationNotice.defaultStatusBarHidden
+    /// Common status bar hidden status. Default is `true`.
     public class var defaultStatusBarHidden: Bool {
         set { sharedManager.statusBarHidden = newValue }
         get { return sharedManager.statusBarHidden }
     }
     private var showAnimations: ((() -> Void, (Bool) -> Void) -> Void)? = NavigationNotice.defaultShowAnimations
+    /// Common animated block of show. Default is `nil`.
     public class var defaultShowAnimations: ((() -> Void, (Bool) -> Void) -> Void)? {
         set { sharedManager.showAnimations = newValue }
         get { return sharedManager.showAnimations }
     }
     private var hideAnimations: ((() -> Void, (Bool) -> Void) -> Void)? = NavigationNotice.defaultHideAnimations
+    /// Common animated block of hide. Default is `nil`.
     public class var defaultHideAnimations: ((() -> Void, (Bool) -> Void) -> Void)? {
         set { sharedManager.hideAnimations = newValue }
         get { return sharedManager.hideAnimations }
@@ -317,10 +320,12 @@ public class NavigationNotice {
     
     private static let sharedManager = NoticeManager()
     
+    /// Notification currently displayed.
     public class func currentNotice() -> NavigationNotice? {
         return sharedManager.showingNotice
     }
     
+    /// Add content to display.
     public class func addContent(view: UIView) -> NavigationNotice {
         let notice = NavigationNotice()
         notice.noticeViewController.setContent(view)
@@ -328,6 +333,7 @@ public class NavigationNotice {
         return notice
     }
     
+    /// Set status bar hidden of notification.
     public class func statusBarHidden(hidden: Bool) -> NavigationNotice {
         let notice = NavigationNotice()
         notice.statusBarHidden =  hidden
@@ -337,6 +343,7 @@ public class NavigationNotice {
     
     private init() {}
     
+    /// Add content to display.
     public func addContent(view: UIView) -> Self {
         noticeViewController.setContent(view)
         
@@ -347,6 +354,7 @@ public class NavigationNotice {
         return self
     }
     
+    /// Show notification on view.
     public func showOn(view: UIView) -> Self {
         noticeViewController.showAnimations = showAnimations
         noticeViewController.hideAnimations = hideAnimations
@@ -362,24 +370,28 @@ public class NavigationNotice {
         return self
     }
     
+    /// Animated block of show.
     public func showAnimations(animations: (() -> Void, (Bool) -> Void) -> Void) -> Self {
         noticeViewController.showAnimations = animations
         
         return self
     }
     
+    /// Hide notification.
     public func hide(interval: NSTimeInterval) -> Self {
         noticeViewController.setInterval(interval)
         
         return self
     }
     
+    /// Animated block of hide.
     public func hideAnimations(animations: (() -> Void, (Bool) -> Void) -> Void) -> Self {
         noticeViewController.hideAnimations = animations
         
         return self
     }
     
+    /// Remove all notification.
     public func removeAll(hidden: Bool) -> Self {
         let notice = NavigationNotice.sharedManager
         notice.removeAll()
