@@ -30,7 +30,6 @@ class ViewController: UIViewController {
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(4.0 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), {
             NavigationNotice.currentNotice()?.hide(2)
-            return
         })
     }
 }
