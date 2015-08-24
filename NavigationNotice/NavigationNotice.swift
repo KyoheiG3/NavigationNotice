@@ -347,7 +347,7 @@ public class NavigationNotice {
         noticeViewController.setContent(view)
         
         if noticeViewController.targetView != nil {
-            self.dynamicType.sharedManager().add(self)
+            NavigationNotice.sharedManager.add(self)
         }
         
         return self
@@ -358,11 +358,11 @@ public class NavigationNotice {
         noticeViewController.hideAnimations = hideAnimations
         noticeViewController.targetView = view
         noticeViewController.hideCompletionHandler = {
-            self.dynamicType.sharedManager().next()
+            NavigationNotice.sharedManager.next()
         }
         
         if noticeViewController.contentView != nil {
-            self.dynamicType.sharedManager().add(self)
+            NavigationNotice.sharedManager.add(self)
         }
         
         return self
@@ -387,7 +387,7 @@ public class NavigationNotice {
     }
     
     public func removeAll(hidden: Bool) -> Self {
-        let notice = self.dynamicType.sharedManager()
+        let notice = NavigationNotice.sharedManager
         notice.removeAll()
         
         if hidden {
