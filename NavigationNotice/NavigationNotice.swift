@@ -48,6 +48,11 @@ public class NavigationNotice {
             set { noticeView.contentOffset.y = newValue }
             get { return noticeView.contentOffset.y }
         }
+        private var hiddenTimer: NSTimer? {
+            didSet {
+                oldValue?.invalidate()
+            }
+        }
         
         var showAnimations: ((() -> Void, (Bool) -> Void) -> Void)?
         var hideAnimations: ((() -> Void, (Bool) -> Void) -> Void)?
@@ -96,16 +101,24 @@ public class NavigationNotice {
         }
         
         func timer(interval: NSTimeInterval) {
-            let time = dispatch_time(DISPATCH_TIME_NOW, Int64(interval * Double(NSEC_PER_SEC)))
-            
-            dispatch_after(time, dispatch_get_main_queue()) {
-                self.hiddenTimeInterval = 0
+            let handler: (CFRunLoopTimer?) -> Void = { [weak self] timer in
+                self?.hiddenTimer = nil
+                self?.hiddenTimeInterval = 0
                 
-                if self.autoHidden == true {
-                    if self.panGesture.state != .Changed && self.scrollPanGesture?.state != .Some(.Changed) {
-                        self.hide(true)
+                if self?.autoHidden == true {
+                    if self?.panGesture.state != .Changed && self?.scrollPanGesture?.state != .Some(.Changed) {
+                        self?.hide(true)
                     }
                 }
+            }
+            
+            if interval > 0 {
+                let fireDate = interval + CFAbsoluteTimeGetCurrent()
+                let timer = CFRunLoopTimerCreateWithHandler(kCFAllocatorDefault, fireDate, 0, 0, 0, handler)
+                CFRunLoopAddTimer(CFRunLoopGetCurrent(), timer, kCFRunLoopCommonModes)
+                hiddenTimer = timer
+            } else {
+                handler(nil)
             }
         }
         
