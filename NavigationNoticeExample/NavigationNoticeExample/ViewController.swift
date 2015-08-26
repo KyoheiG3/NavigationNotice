@@ -47,11 +47,11 @@ class ViewController: UIViewController {
             }
             
             NavigationNotice.defaultShowAnimations = { animations, completion in
-                UIView.animateWithDuration(0.5, delay: 0, usingSpringWithDamping: 0.3, initialSpringVelocity: 0, options: .BeginFromCurrentState, animations: animations, completion: completion)
+                UIView.animateWithDuration(0.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: .BeginFromCurrentState, animations: animations, completion: completion)
             }
             
             NavigationNotice.defaultHideAnimations = { animations, completion in
-                UIView.animateWithDuration(0.5, delay: 0, usingSpringWithDamping: 0.3, initialSpringVelocity: 0, options: .BeginFromCurrentState, animations: animations, completion: completion)
+                UIView.animateWithDuration(0.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: .BeginFromCurrentState, animations: animations, completion: completion)
             }
             
             let content2 = self.contentView("Timer Notification.\nCustomize your animation.")
@@ -59,5 +59,16 @@ class ViewController: UIViewController {
             
             NavigationNotice.addContent(content2).showOn(self.view).hide(2)
         }
+    }
+    
+    @IBAction func showButtonWasTapped(sender: UIButton) {
+        let content = self.contentView("Create your content.")
+        content.frame.size.height = 50
+        content.backgroundColor = UIColor.blackColor().colorWithAlphaComponent(0.9)
+        NavigationNotice.addContent(content).showOn(self.view).hide(5)
+    }
+    
+    @IBAction func hideBUttonWasTapped(sender: UIButton) {
+        NavigationNotice.currentNotice()?.hide(0)
     }
 }
