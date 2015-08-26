@@ -14,7 +14,7 @@ class ViewController: UIViewController {
 
     private func contentView(text: String) -> UIView {
         let view = UIView(frame: CGRect(x: 0, y: 0, width: 375, height: 64))
-        view.autoresizingMask = .FlexibleWidth | .FlexibleHeight
+        view.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
         
         let label = UILabel(frame: view.bounds)
         label.frame.origin.x = 10
@@ -22,7 +22,7 @@ class ViewController: UIViewController {
         label.frame.size.width -= label.frame.origin.x
         label.frame.size.height -= label.frame.origin.y
         
-        label.autoresizingMask = .FlexibleWidth | .FlexibleHeight
+        label.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
         label.text = text
         label.numberOfLines = 2
         label.textColor = UIColor.whiteColor()
