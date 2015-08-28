@@ -41,6 +41,7 @@ public class NavigationNotice {
         private var contentView: UIView?
         private var autoHidden: Bool = false
         private var hiddenTimeInterval: NSTimeInterval = 0
+        private var statusBarStyle: UIStatusBarStyle = .Default
         private var contentHeight: CGFloat {
             return noticeView.bounds.height
         }
@@ -57,6 +58,10 @@ public class NavigationNotice {
         var showAnimations: ((() -> Void, (Bool) -> Void) -> Void)?
         var hideAnimations: ((() -> Void, (Bool) -> Void) -> Void)?
         var hideCompletionHandler: (() -> Void)?
+        
+        override func preferredStatusBarStyle() -> UIStatusBarStyle {
+            return statusBarStyle
+        }
         
         override func loadView() {
             super.loadView()
@@ -255,12 +260,16 @@ public class NavigationNotice {
         private var contents: [NavigationNotice] = []
         private var showingNotice: NavigationNotice?
         private var statusBarHidden: Bool = true
+        private var statusBarStyle: UIStatusBarStyle?
         private var showAnimations: ((() -> Void, (Bool) -> Void) -> Void)?
         private var hideAnimations: ((() -> Void, (Bool) -> Void) -> Void)?
         
         private func startNotice(notice: NavigationNotice) {
             showingNotice = notice
             
+            if let style = notice.statusBarStyle {
+                notice.noticeViewController.statusBarStyle = style
+            }
             noticeWindow?.rootViewController = notice.noticeViewController
             noticeWindow?.windowLevel = UIWindowLevelStatusBar + (notice.statusBarHidden ? 1 : -1)
             
@@ -313,6 +322,12 @@ public class NavigationNotice {
     
     private var noticeViewController = ViewController()
     private var statusBarHidden: Bool = NavigationNotice.defaultStatusBarHidden
+    private var statusBarStyle: UIStatusBarStyle? = NavigationNotice.defaultStatusBarStyle
+    /// Common status bar style.
+    public class var defaultStatusBarStyle: UIStatusBarStyle? {
+        set { sharedManager.statusBarStyle = newValue }
+        get { return sharedManager.statusBarStyle }
+    }
     /// Common status bar hidden status. Default is `true`.
     public class var defaultStatusBarHidden: Bool {
         set { sharedManager.statusBarHidden = newValue }
@@ -354,7 +369,22 @@ public class NavigationNotice {
         return notice
     }
     
+    /// Set status bar style of notification.
+    public class func statusBarStyle(style: UIStatusBarStyle) -> NavigationNotice {
+        let notice = NavigationNotice()
+        notice.statusBarStyle = style
+        
+        return notice
+    }
+    
     private init() {}
+    
+    /// Set status bar style of notification.
+    public func statusBarStyle(style: UIStatusBarStyle) -> NavigationNotice {
+        noticeViewController.statusBarStyle = style
+        
+        return self
+    }
     
     /// Add content to display.
     public func addContent(view: UIView) -> Self {

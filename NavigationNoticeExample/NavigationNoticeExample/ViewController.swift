@@ -65,7 +65,7 @@ class ViewController: UIViewController {
         let content = self.contentView("Create your content.")
         content.frame.size.height = 50
         content.backgroundColor = UIColor.blackColor().colorWithAlphaComponent(0.9)
-        NavigationNotice.addContent(content).showOn(self.view).hide(5)
+        NavigationNotice.statusBarHidden(false).statusBarStyle(.LightContent).addContent(content).showOn(self.view).hide(5)
     }
     
     @IBAction func hideBUttonWasTapped(sender: UIButton) {
