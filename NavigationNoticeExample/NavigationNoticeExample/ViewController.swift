@@ -40,7 +40,7 @@ class ViewController: UIViewController {
             let content1 = self.contentView("Interactive Notification.\nYour original contents.")
             content1.backgroundColor = UIColor.redColor().colorWithAlphaComponent(0.9)
             
-            NavigationNotice.statusBarHidden(false).addContent(content1).showOn(self.view).showAnimations { animations, completion in
+            NavigationNotice.onStatusBar(false).addContent(content1).showOn(self.view).showAnimations { animations, completion in
                 UIView.animateWithDuration(0.6, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.1, options: .BeginFromCurrentState, animations: animations, completion: completion)
             } .hideAnimations { animations, completion in
                 UIView.animateWithDuration(0.8, animations: animations, completion: completion)
@@ -57,7 +57,7 @@ class ViewController: UIViewController {
             let content2 = self.contentView("Timer Notification.\nCustomize your animation.")
             content2.backgroundColor = UIColor.blueColor().colorWithAlphaComponent(0.9)
             
-            NavigationNotice.addContent(content2).showOn(self.view).hide(2)
+            NavigationNotice.addContent(content2).statusBarHidden(true).showOn(self.view).hide(2)
         }
     }
     
@@ -65,7 +65,7 @@ class ViewController: UIViewController {
         let content = self.contentView("Create your content.")
         content.frame.size.height = 50
         content.backgroundColor = UIColor.blackColor().colorWithAlphaComponent(0.9)
-        NavigationNotice.statusBarHidden(false).statusBarStyle(.LightContent).addContent(content).showOn(self.view).hide(5)
+        NavigationNotice.onStatusBar(false).statusBarStyle(.LightContent).addContent(content).showOn(self.view).hide(5)
     }
     
     @IBAction func hideBUttonWasTapped(sender: UIButton) {

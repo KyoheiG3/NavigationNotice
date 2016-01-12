@@ -79,7 +79,7 @@ NavigationNotice.statusBarHidden(false).addContent(noticeView).showOn(self.view)
 class var defaultStatusBarHidden: Bool
 ```
 * Common status bar hidden status.
-* Default is `true`.
+* Default is `nil`.
 
 ```swift
 class var defaultShowAnimations: ((() -> Void, (Bool) -> Void) -> Void)?
@@ -110,6 +110,12 @@ class func addContent(view: UIView) -> NavigationNotice.NavigationNotice
 class func statusBarHidden(hidden: Bool) -> NavigationNotice.NavigationNotice
 ```
 * Set status bar hidden of notification.
+* Return `NavigationNotice` instance.
+
+```swift
+class func onStatusBar(on: Bool) -> NavigationNotice
+```
+* Set on the status bar of notification.
 * Return `NavigationNotice` instance.
 
 ```swift
