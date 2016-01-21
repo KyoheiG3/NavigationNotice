@@ -57,7 +57,7 @@ class ViewController: UIViewController {
             let content2 = self.contentView("Timer Notification.\nCustomize your animation.")
             content2.backgroundColor = UIColor.blueColor().colorWithAlphaComponent(0.9)
             
-            NavigationNotice.addContent(content2).statusBarHidden(true).showOn(self.view).hide(2)
+            NavigationNotice.addContent(content2).showOn(self.view).hide(2)
         }
     }
     
@@ -65,7 +65,7 @@ class ViewController: UIViewController {
         let content = self.contentView("Create your content.")
         content.frame.size.height = 50
         content.backgroundColor = UIColor.blackColor().colorWithAlphaComponent(0.9)
-        NavigationNotice.onStatusBar(false).statusBarStyle(.LightContent).addContent(content).showOn(self.view).hide(5)
+        NavigationNotice.onStatusBar(false).addContent(content).showOn(self.view).hide(5)
     }
     
     @IBAction func hideBUttonWasTapped(sender: UIButton) {
