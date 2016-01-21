@@ -64,7 +64,7 @@ Set status bar hidden and animated block.
 
 ```swift
 let noticeView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 64))
-NavigationNotice.statusBarHidden(false).addContent(noticeView).showOn(self.view).showAnimations { animations, completion in
+NavigationNotice.addContent(noticeView).showOn(self.view).showAnimations { animations, completion in
     UIView.animateWithDuration(0.6, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.1, options: .BeginFromCurrentState, animations: animations, completion: completion)
 } .hideAnimations { animations, completion in
     UIView.animateWithDuration(0.8, animations: animations, completion: completion)
@@ -74,12 +74,6 @@ NavigationNotice.statusBarHidden(false).addContent(noticeView).showOn(self.view)
 * Custome show and hide animation.
 
 ### Variable
-
-```swift
-class var defaultStatusBarHidden: Bool
-```
-* Common status bar hidden status.
-* Default is `nil`.
 
 ```swift
 class var defaultShowAnimations: ((() -> Void, (Bool) -> Void) -> Void)?
@@ -104,12 +98,6 @@ class func currentNotice() -> NavigationNotice.NavigationNotice?
 class func addContent(view: UIView) -> NavigationNotice.NavigationNotice
 ```
 * Add content to display.
-* Return `NavigationNotice` instance.
-
-```swift
-class func statusBarHidden(hidden: Bool) -> NavigationNotice.NavigationNotice
-```
-* Set status bar hidden of notification.
 * Return `NavigationNotice` instance.
 
 ```swift
