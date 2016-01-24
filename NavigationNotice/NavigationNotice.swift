@@ -160,6 +160,7 @@ public class NavigationNotice {
                 view.frame.origin.y = -contentHeight
                 view.autoresizingMask = .FlexibleWidth
                 noticeView.addSubview(view)
+                view.setNeedsDisplay()
             }
             
             noticeView.contentSize = noticeView.bounds.size
@@ -346,6 +347,7 @@ public class NavigationNotice {
     
     private var noticeViewController = ViewController()
     private var onStatusBar: Bool = NavigationNotice.defaultOnStatusBar
+    private var completionHandler: (() -> Void)?
     /// Common navigation bar on the status bar. Default is `true`.
     public class var defaultOnStatusBar: Bool {
         set { sharedManager.onStatusBar = newValue }
@@ -405,7 +407,9 @@ public class NavigationNotice {
         noticeViewController.showAnimations = showAnimations
         noticeViewController.hideAnimations = hideAnimations
         noticeViewController.targetView = view
-        noticeViewController.hideCompletionHandler = {
+        noticeViewController.hideCompletionHandler = { [weak self] in
+            self?.completionHandler?()
+            self?.completionHandler = nil
             NavigationNotice.sharedManager.next()
         }
         
@@ -435,6 +439,10 @@ public class NavigationNotice {
         noticeViewController.hideAnimations = animations
         
         return self
+    }
+    
+    public func completion(completion: (() -> Void)?) {
+        completionHandler = completion
     }
     
     /// Remove all notification.
