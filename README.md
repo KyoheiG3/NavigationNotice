@@ -107,6 +107,11 @@ class func onStatusBar(on: Bool) -> NavigationNotice
 * Return `NavigationNotice` instance.
 
 ```swift
+func completion(completion: (() -> Void)?)
+```
+* Completion handler.
+
+```swift
 func addContent(view: UIView) -> Self
 ```
 * Add content to display.
