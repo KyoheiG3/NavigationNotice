@@ -41,6 +41,9 @@ public class NavigationNotice {
         private var targetController: UIViewController? {
             return targetView?.window?.rootViewController
         }
+        private var childController: UIViewController? {
+            return targetController?.presentedViewController ?? targetController
+        }
         private var contentView: UIView?
         private var autoHidden: Bool = false
         private var hiddenTimeInterval: NSTimeInterval = 0
@@ -61,12 +64,27 @@ public class NavigationNotice {
         var hideAnimations: ((() -> Void, (Bool) -> Void) -> Void)?
         var hideCompletionHandler: (() -> Void)?
         
+        override func shouldAutorotate() -> Bool {
+            return childController?.shouldAutorotate()
+                ?? super.shouldAutorotate()
+        }
+        
+        override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
+            return childController?.supportedInterfaceOrientations()
+                ?? super.supportedInterfaceOrientations()
+        }
+        
+        override func preferredInterfaceOrientationForPresentation() -> UIInterfaceOrientation {
+            return childController?.preferredInterfaceOrientationForPresentation()
+                ?? super.preferredInterfaceOrientationForPresentation()
+        }
+        
         override func childViewControllerForStatusBarStyle() -> UIViewController? {
-            return targetController?.presentedViewController ?? targetController
+            return childController
         }
         
         override func childViewControllerForStatusBarHidden() -> UIViewController? {
-            return targetController?.presentedViewController ?? targetController
+            return childController
         }
         
         override func loadView() {
