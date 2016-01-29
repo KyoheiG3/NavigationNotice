@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "NavigationNotice"
-  s.version      = "1.1.1"
+  s.version      = "1.1.2"
   s.summary      = "Customizable and interactive animated notification UI control."
   s.homepage     = "https://github.com/KyoheiG3/NavigationNotice"
   s.license      = { :type => "MIT", :file => "LICENSE" }
