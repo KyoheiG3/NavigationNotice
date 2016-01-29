@@ -37,9 +37,12 @@ public class NavigationNotice {
             return noticeView.gestureRecognizers?.filter({ $0 as? UIPanGestureRecognizer != nil }).first as? UIPanGestureRecognizer
         }
         private lazy var noticeView: HitScrollView = HitScrollView(frame: self.view.bounds)
-        private weak var targetView: UIView?
+        private weak var targetView: UIView? {
+            didSet { targerWindow = targetView?.window }
+        }
+        private weak var targerWindow: UIWindow?
         private var targetController: UIViewController? {
-            return targetView?.window?.rootViewController
+            return targerWindow?.rootViewController
         }
         private var childController: UIViewController? {
             return targetController?.presentedViewController ?? targetController
