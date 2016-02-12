@@ -16,7 +16,7 @@ Easy to write at chainable syntax.
 
 ### iOS 8+
 
-#### Cocoapods
+#### CocoaPods
 
 Add the following to your `Podfile`:
 
