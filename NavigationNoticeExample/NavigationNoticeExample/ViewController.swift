@@ -12,9 +12,9 @@ import NavigationNotice
 class ViewController: UIViewController {
     var tableSourceList: [[String]] = [[Int](0..<20).map({ "section 0, cell \($0)" })]
 
-    private func contentView(text: String) -> UIView {
+    fileprivate func contentView(_ text: String) -> UIView {
         let view = UIView(frame: CGRect(x: 0, y: 0, width: 375, height: 64))
-        view.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
+        view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         
         let label = UILabel(frame: view.bounds)
         label.frame.origin.x = 10
@@ -22,10 +22,10 @@ class ViewController: UIViewController {
         label.frame.size.width -= label.frame.origin.x
         label.frame.size.height -= label.frame.origin.y
         
-        label.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
+        label.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         label.text = text
         label.numberOfLines = 2
-        label.textColor = UIColor.whiteColor()
+        label.textColor = UIColor.white
         view.addSubview(label)
         
         return view
@@ -36,39 +36,39 @@ class ViewController: UIViewController {
         
         title = "Notification"
         
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(1 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) {
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(1 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)) {
             let content1 = self.contentView("Interactive Notification.\nYour original contents.")
-            content1.backgroundColor = UIColor.redColor().colorWithAlphaComponent(0.9)
-            
+            content1.backgroundColor = UIColor.red.withAlphaComponent(0.9)
+            //UIView.animate(withDuration: 0.6, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.1, options: .beginFromCurrentState, animations: <#T##() -> Void#>, completion: <#T##((Bool) -> Void)?##((Bool) -> Void)?##(Bool) -> Void#>)
             NavigationNotice.onStatusBar(false).addContent(content1).showOn(self.view).showAnimations { animations, completion in
-                UIView.animateWithDuration(0.6, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.1, options: .BeginFromCurrentState, animations: animations, completion: completion)
+                UIView.animate(withDuration: 0.6, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.1, options: .beginFromCurrentState, animations: animations, completion: completion)
             } .hideAnimations { animations, completion in
-                UIView.animateWithDuration(0.8, animations: animations, completion: completion)
+                UIView.animate(withDuration: 0.8, animations: animations, completion: completion)
             }
             
             NavigationNotice.defaultShowAnimations = { animations, completion in
-                UIView.animateWithDuration(0.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: .BeginFromCurrentState, animations: animations, completion: completion)
+                UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: .beginFromCurrentState, animations: animations, completion: completion)
             }
             
             NavigationNotice.defaultHideAnimations = { animations, completion in
-                UIView.animateWithDuration(0.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: .BeginFromCurrentState, animations: animations, completion: completion)
+                UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: .beginFromCurrentState, animations: animations, completion: completion)
             }
             
             let content2 = self.contentView("Timer Notification.\nCustomize your animation.")
-            content2.backgroundColor = UIColor.blueColor().colorWithAlphaComponent(0.9)
+            content2.backgroundColor = UIColor.blue.withAlphaComponent(0.9)
             
             NavigationNotice.addContent(content2).showOn(self.view).hide(2)
         }
     }
     
-    @IBAction func showButtonWasTapped(sender: UIButton) {
+    @IBAction func showButtonWasTapped(_ sender: UIButton) {
         let content = self.contentView("Create your content.")
         content.frame.size.height = 50
-        content.backgroundColor = UIColor.blackColor().colorWithAlphaComponent(0.9)
+        content.backgroundColor = UIColor.black.withAlphaComponent(0.9)
         NavigationNotice.onStatusBar(false).addContent(content).showOn(self.view).hide(5)
     }
     
-    @IBAction func hideBUttonWasTapped(sender: UIButton) {
+    @IBAction func hideBUttonWasTapped(_ sender: UIButton) {
         NavigationNotice.currentNotice()?.hide(0)
     }
 }
