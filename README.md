@@ -12,6 +12,11 @@ Easy to write at chainable syntax.
 
 ![Notice](https://github.com/KyoheiG3/assets/blob/master/NavigationNotice/notice.gif)
 
+## Requirements
+
+- Swift 3.0
+- iOS 7.0 or later
+
 ## How to Install NavigationNotice
 
 ### iOS 8+
