@@ -430,8 +430,9 @@ open class NavigationNotice {
     }
     
     /// Hide notification.
-    open func hide(_ interval: TimeInterval) {
+    open func hide(_ interval: TimeInterval) -> Self {
         noticeViewController.setInterval(interval)
+        return self
     }
     
     /// Animated block of hide.
@@ -451,7 +452,7 @@ open class NavigationNotice {
         notice.removeAll()
         
         if hidden {
-            notice.showingNotice?.hide(0)
+            _ = notice.showingNotice?.hide(0)
         }
         
         return self
