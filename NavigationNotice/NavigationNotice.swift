@@ -32,6 +32,7 @@ open class NavigationNotice {
             }
         }
         
+        fileprivate var position: NoticePosition = .top
         fileprivate lazy var panGesture: UIPanGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(ViewController.panGestureAction(_:)))
         fileprivate var scrollPanGesture: UIPanGestureRecognizer? {
             return noticeView.gestureRecognizers?.filter({ $0 as? UIPanGestureRecognizer != nil }).first as? UIPanGestureRecognizer
@@ -105,7 +106,12 @@ open class NavigationNotice {
             noticeView.isPagingEnabled = true
             noticeView.bounces = false
             noticeView.delegate = self
-            noticeView.autoresizingMask = .flexibleWidth
+            switch position {
+            case .top:
+                noticeView.autoresizingMask = .flexibleWidth
+            case .bottom:
+                noticeView.autoresizingMask = [.flexibleWidth, .flexibleTopMargin, .flexibleBottomMargin]
+            }
             view.addSubview(noticeView)
         }
         
@@ -160,14 +166,22 @@ open class NavigationNotice {
             if let view = contentView {
                 noticeView.frame.size.height = view.frame.height
                 view.frame.size.width = noticeView.bounds.width
-                view.frame.origin.y = -contentHeight
                 view.autoresizingMask = .flexibleWidth
                 noticeView.addSubview(view)
                 view.setNeedsDisplay()
+                
+                noticeView.contentSize = noticeView.bounds.size
+                switch position {
+                case .top:
+                    noticeView.contentInset.top = contentHeight
+                    noticeView.frame.origin = .zero
+                    view.frame.origin.y = -contentHeight
+                case .bottom:
+                    noticeView.contentInset.bottom = contentHeight
+                    view.frame.origin.y = contentHeight
+                    noticeView.frame.origin = CGPoint(x: 0, y: self.view.bounds.height - noticeView.bounds.height)
+                }
             }
-            
-            noticeView.contentSize = noticeView.bounds.size
-            noticeView.contentInset.top = contentHeight
             
             show() {
                 self.targetView?.addGestureRecognizer(self.panGesture)
@@ -180,7 +194,12 @@ open class NavigationNotice {
         
         func show(_ completion: @escaping () -> Void) {
             showContent({
-                self.contentOffsetY = -self.contentHeight
+                switch self.position {
+                case .top:
+                    self.contentOffsetY = -self.contentHeight
+                case .bottom:
+                    self.contentOffsetY = self.contentHeight
+                }
                 self.setNeedsStatusBarAppearanceUpdate()
                 }) { _ in
                     completion()
@@ -348,6 +367,11 @@ open class NavigationNotice {
         }
     }
     
+    public enum NoticePosition {
+        case top
+        case bottom
+    }
+    
     fileprivate var noticeViewController = ViewController()
     fileprivate var onStatusBar: Bool = NavigationNotice.defaultOnStatusBar
     fileprivate var completionHandler: (() -> Void)?
@@ -376,6 +400,7 @@ open class NavigationNotice {
     }
     
     /// Add content to display.
+    @discardableResult
     open class func addContent(_ view: UIView) -> NavigationNotice {
         let notice = NavigationNotice()
         notice.noticeViewController.setContent(view)
@@ -384,6 +409,7 @@ open class NavigationNotice {
     }
     
     /// Set on the status bar of notification.
+    @discardableResult
     open class func onStatusBar(_ on: Bool) -> NavigationNotice {
         let notice = NavigationNotice()
         notice.onStatusBar = on
@@ -391,9 +417,17 @@ open class NavigationNotice {
         return notice
     }
     
+    @discardableResult
+    open class func position(_ position: NoticePosition) -> NavigationNotice {
+        let notice = NavigationNotice()
+        notice.noticeViewController.position = position
+        return notice
+    }
+    
     fileprivate init() {}
     
     /// Add content to display.
+    @discardableResult
     open func addContent(_ view: UIView) -> Self {
         noticeViewController.setContent(view)
         
@@ -405,6 +439,7 @@ open class NavigationNotice {
     }
     
     /// Show notification on view.
+    @discardableResult
     open func showOn(_ view: UIView) -> Self {
         noticeViewController.showAnimations = showAnimations
         noticeViewController.hideAnimations = hideAnimations
@@ -423,6 +458,7 @@ open class NavigationNotice {
     }
     
     /// Animated block of show.
+    @discardableResult
     open func showAnimations(_ animations: @escaping (@escaping () -> Void, @escaping (Bool) -> Void) -> Void) -> Self {
         noticeViewController.showAnimations = animations
         
@@ -430,23 +466,27 @@ open class NavigationNotice {
     }
     
     /// Hide notification.
+    @discardableResult
     open func hide(_ interval: TimeInterval) -> Self {
         noticeViewController.setInterval(interval)
         return self
     }
     
     /// Animated block of hide.
+    @discardableResult
     open func hideAnimations(_ animations: @escaping (@escaping () -> Void, @escaping (Bool) -> Void) -> Void) -> Self {
         noticeViewController.hideAnimations = animations
         
         return self
     }
     
+    @discardableResult
     open func completion(_ completion: (() -> Void)?) {
         completionHandler = completion
     }
     
     /// Remove all notification.
+    @discardableResult
     open func removeAll(_ hidden: Bool) -> Self {
         let notice = NavigationNotice.sharedManager
         notice.removeAll()
@@ -455,6 +495,12 @@ open class NavigationNotice {
             _ = notice.showingNotice?.hide(0)
         }
         
+        return self
+    }
+    
+    @discardableResult
+    open func position(_ position: NoticePosition) -> Self {
+        noticeViewController.position = position
         return self
     }
 }
