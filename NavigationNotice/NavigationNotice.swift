@@ -400,6 +400,7 @@ open class NavigationNotice {
     }
     
     /// Add content to display.
+    @discardableResult
     open class func addContent(_ view: UIView) -> NavigationNotice {
         let notice = NavigationNotice()
         notice.noticeViewController.setContent(view)
@@ -408,6 +409,7 @@ open class NavigationNotice {
     }
     
     /// Set on the status bar of notification.
+    @discardableResult
     open class func onStatusBar(_ on: Bool) -> NavigationNotice {
         let notice = NavigationNotice()
         notice.onStatusBar = on
@@ -415,6 +417,7 @@ open class NavigationNotice {
         return notice
     }
     
+    @discardableResult
     open class func position(_ position: NoticePosition) -> NavigationNotice {
         let notice = NavigationNotice()
         notice.noticeViewController.position = position
@@ -424,6 +427,7 @@ open class NavigationNotice {
     fileprivate init() {}
     
     /// Add content to display.
+    @discardableResult
     open func addContent(_ view: UIView) -> Self {
         noticeViewController.setContent(view)
         
@@ -435,6 +439,7 @@ open class NavigationNotice {
     }
     
     /// Show notification on view.
+    @discardableResult
     open func showOn(_ view: UIView) -> Self {
         noticeViewController.showAnimations = showAnimations
         noticeViewController.hideAnimations = hideAnimations
@@ -453,6 +458,7 @@ open class NavigationNotice {
     }
     
     /// Animated block of show.
+    @discardableResult
     open func showAnimations(_ animations: @escaping (@escaping () -> Void, @escaping (Bool) -> Void) -> Void) -> Self {
         noticeViewController.showAnimations = animations
         
@@ -460,23 +466,27 @@ open class NavigationNotice {
     }
     
     /// Hide notification.
+    @discardableResult
     open func hide(_ interval: TimeInterval) -> Self {
         noticeViewController.setInterval(interval)
         return self
     }
     
     /// Animated block of hide.
+    @discardableResult
     open func hideAnimations(_ animations: @escaping (@escaping () -> Void, @escaping (Bool) -> Void) -> Void) -> Self {
         noticeViewController.hideAnimations = animations
         
         return self
     }
     
+    @discardableResult
     open func completion(_ completion: (() -> Void)?) {
         completionHandler = completion
     }
     
     /// Remove all notification.
+    @discardableResult
     open func removeAll(_ hidden: Bool) -> Self {
         let notice = NavigationNotice.sharedManager
         notice.removeAll()
@@ -488,6 +498,7 @@ open class NavigationNotice {
         return self
     }
     
+    @discardableResult
     open func position(_ position: NoticePosition) -> Self {
         noticeViewController.position = position
         return self
