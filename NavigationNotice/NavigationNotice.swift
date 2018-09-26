@@ -82,11 +82,11 @@ open class NavigationNotice {
                 ?? super.preferredInterfaceOrientationForPresentation
         }
         
-        override var childViewControllerForStatusBarStyle : UIViewController? {
+        override var childForStatusBarStyle : UIViewController? {
             return childController
         }
         
-        override var childViewControllerForStatusBarHidden : UIViewController? {
+        override var childForStatusBarHidden : UIViewController? {
             return childController
         }
         
@@ -213,7 +213,7 @@ open class NavigationNotice {
             }
         }
         
-        func panGestureAction(_ gesture: UIPanGestureRecognizer) {
+        @objc func panGestureAction(_ gesture: UIPanGestureRecognizer) {
             if contentOffsetY >= 0 {
                 hide(false)
                 return
@@ -298,7 +298,7 @@ open class NavigationNotice {
             showingNotice = notice
             
             noticeWindow?.rootViewController = notice.noticeViewController
-            noticeWindow?.windowLevel = UIWindowLevelStatusBar + (notice.onStatusBar ? 1 : -1)
+            noticeWindow?.windowLevel = UIWindow.Level.statusBar + (notice.onStatusBar ? 1 : -1)
             
             if let view = notice.noticeViewController.targetView {
                 mainWindow = view.window
@@ -423,6 +423,7 @@ open class NavigationNotice {
     }
     
     /// Animated block of show.
+    @discardableResult
     open func showAnimations(_ animations: @escaping (@escaping () -> Void, @escaping (Bool) -> Void) -> Void) -> Self {
         noticeViewController.showAnimations = animations
         
@@ -430,12 +431,14 @@ open class NavigationNotice {
     }
     
     /// Hide notification.
+    @discardableResult
     open func hide(_ interval: TimeInterval) -> Self {
         noticeViewController.setInterval(interval)
         return self
     }
     
     /// Animated block of hide.
+    @discardableResult
     open func hideAnimations(_ animations: @escaping (@escaping () -> Void, @escaping (Bool) -> Void) -> Void) -> Self {
         noticeViewController.hideAnimations = animations
         
