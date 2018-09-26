@@ -14,7 +14,7 @@ Easy to write at chainable syntax.
 
 ## Requirements
 
-- Swift 3.0
+- Swift 4.2
 - iOS 7.0 or later
 
 ## How to Install NavigationNotice
@@ -29,7 +29,6 @@ Add the following to your `Podfile`:
 pod "NavigationNotice"
 use_frameworks!
 ```
-Note: the `use_frameworks!` is required for pods made in Swift.
 
 #### Carthage
 
