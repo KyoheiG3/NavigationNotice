@@ -12,8 +12,16 @@ import NavigationNotice
 class ViewController: UIViewController {
     var tableSourceList: [[String]] = [[Int](0..<20).map({ "section 0, cell \($0)" })]
 
+    var topSafeAreaHeight: CGFloat = .zero
+
     fileprivate func contentView(_ text: String) -> UIView {
-        let view = UIView(frame: CGRect(x: 0, y: 0, width: 375, height: 64))
+
+        var view: UIView!
+        if #available(iOS 11.0, *) {
+            view = UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: topSafeAreaHeight))
+        } else {
+            view = UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 64))
+        }
         view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         
         let label = UILabel(frame: view.bounds)
@@ -58,6 +66,13 @@ class ViewController: UIViewController {
             content2.backgroundColor = UIColor.blue.withAlphaComponent(0.9)
             
             NavigationNotice.addContent(content2).showOn(self.view).hide(2)
+        }
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        if #available(iOS 11.0, *) {
+            topSafeAreaHeight = self.view.safeAreaInsets.top
         }
     }
     
