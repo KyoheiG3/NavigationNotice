@@ -14,7 +14,7 @@ Easy to write at chainable syntax.
 
 ## Requirements
 
-- Swift 4.2
+- Swift 5.0
 - iOS 7.0 or later
 
 ## How to Install NavigationNotice
