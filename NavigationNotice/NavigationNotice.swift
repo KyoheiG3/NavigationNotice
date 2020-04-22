@@ -304,6 +304,8 @@ open class NavigationNotice {
                 mainWindow = view.window
                 
                 notice.noticeViewController.showOn(view)
+            } else {
+                self.next()
             }
         }
         
