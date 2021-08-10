@@ -317,6 +317,15 @@ open class NavigationNotice {
             noticeWindow = nil
         }
         
+        fileprivate func generateWindow() -> HitWindow {
+            if #available(iOS 13.0, *),
+               let windowScene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
+                return HitWindow(windowScene: windowScene)
+            } else {
+                return HitWindow(frame: UIScreen.main.bounds)
+            }
+        }
+        
         func next() {
             if let notice = pop() {
                 startNotice(notice)
@@ -330,7 +339,7 @@ open class NavigationNotice {
             
             DispatchQueue.main.async {
                 if self.showingNotice == nil {
-                    self.noticeWindow = HitWindow(frame: UIScreen.main.bounds)
+                    self.noticeWindow = self.generateWindow()
                     self.noticeWindow?.makeKeyAndVisible()
                     
                     self.next()
