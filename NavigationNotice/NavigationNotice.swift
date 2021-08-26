@@ -38,7 +38,13 @@ open class NavigationNotice {
         }
         fileprivate lazy var noticeView: HitScrollView = HitScrollView(frame: self.view.bounds)
         fileprivate weak var targetView: UIView? {
-            didSet { targerWindow = targetView?.window }
+            didSet {
+                if let window = targetView as? UIWindow {
+                    targerWindow = window
+                } else {
+                    targerWindow = targetView?.window
+                }
+            }
         }
         fileprivate weak var targerWindow: UIWindow?
         fileprivate var targetController: UIViewController? {
